@@ -55,6 +55,14 @@ app.use("/api/reports", reportRoutes)
 // serve static files from "uploads" folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, "../frontend/dist")))
+
+// Catch-all route to serve index.html for React Router
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"))
+})
+
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
 
