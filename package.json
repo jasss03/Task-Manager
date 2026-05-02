@@ -1,0 +1,8 @@
+{
+  "name": "task-manager-root",
+  "private": true,
+  "scripts": {
+    "start": "echo 'Please configure the Root Directory in Railway settings for each service (backend/frontend).'",
+    "build": "echo 'Building monorepo...'"
+  }
+}
