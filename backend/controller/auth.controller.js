@@ -58,16 +58,20 @@ export const signin = async (req, res, next) => {
       return next(errorHandler(400, "All fields are required"))
     }
 
+    console.log(`🔍 Login attempt for: ${email}`)
     const validUser = await User.findOne({ email })
 
     if (!validUser) {
+      console.log(`❌ User not found: ${email}`)
       return next(errorHandler(404, "User not found!"))
     }
 
+    console.log(`✅ User found, checking password...`)
     // compare password
     const validPassword = bcryptjs.compareSync(password, validUser.password)
 
     if (!validPassword) {
+      console.log(`❌ Password mismatch for: ${email}`)
       return next(errorHandler(400, "Wrong Credentials"))
     }
 
@@ -78,8 +82,10 @@ export const signin = async (req, res, next) => {
 
     const { password: pass, ...rest } = validUser._doc
 
+    console.log(`🎉 Login successful for: ${email}`)
     res.status(200).cookie("access_token", token, { httpOnly: true }).json(rest)
   } catch (error) {
+    console.error(`🔥 Login error: ${error.message}`)
     next(error)
   }
 }
