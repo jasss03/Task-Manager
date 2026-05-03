@@ -16,15 +16,22 @@ dotenv.config()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ Database is connected successfully")
-  })
-  .catch((err) => {
-    console.error("❌ Database connection error:", err.message)
-    // Don't exit here to allow Railway to show logs, but requests will fail
-  })
+const mongoURI = process.env.MONGO_URI || process.env.MONGO_URL
+
+if (!mongoURI) {
+  console.error(
+    "❌ ERROR: MONGO_URI or MONGO_URL is not defined in environment variables!"
+  )
+} else {
+  mongoose
+    .connect(mongoURI)
+    .then(() => {
+      console.log("✅ Database is connected successfully")
+    })
+    .catch((err) => {
+      console.error("❌ Database connection error:", err.message)
+    })
+}
 
 const app = express()
 
