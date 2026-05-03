@@ -19,10 +19,11 @@ const __dirname = path.dirname(__filename)
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Database is connected")
+    console.log("✅ Database is connected successfully")
   })
   .catch((err) => {
-    console.log(err)
+    console.error("❌ Database connection error:", err.message)
+    // Don't exit here to allow Railway to show logs, but requests will fail
   })
 
 const app = express()
@@ -30,7 +31,12 @@ const app = express()
 // Middleware to handle cors
 app.use(
   cors({
-    origin: process.env.FRONT_END_URL || "http://localhost:5174",
+    origin: [
+      process.env.FRONT_END_URL,
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://localhost:5175",
+    ].filter(Boolean), // Remove undefined values
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
